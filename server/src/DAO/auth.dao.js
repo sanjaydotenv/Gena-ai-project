@@ -26,6 +26,12 @@ export const createUserDAO = async (name, email, password) => {
 export const loginUserDAO = async (email, password) => {
   const user = await userModel.findOne({ email });
 
+  if (!user) {
+    return res.status(404).json({
+      message: "user not found",
+    });
+  }
+
   const isValidPass = await bcrypt.compare(password, user.password);
 
   if (!isValidPass) {

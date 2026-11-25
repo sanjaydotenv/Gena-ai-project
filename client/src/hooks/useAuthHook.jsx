@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { registerAPI } from "../api/authAPI";
+import { loginAPI, registerAPI } from "../api/authAPI";
 
 export const useAuthHook = () => {
   const [loading, setLoading] = useState(false);
@@ -41,11 +41,17 @@ export const useAuthHook = () => {
     setFormDataLogin({ ...formDataLogin, [name]: value });
   };
 
-  const handleLoginSubmit = (e) => {
+  const handleLoginSubmit = async (e) => {
     e.preventDefault();
 
+    setLoading(true);
+    const response = await loginAPI(formDataLogin);
+    setLoading(false);
 
-    console.log(formDataLogin);
+    setFormDataLogin({
+      email: "",
+      password: "",
+    });
   };
 
   return {

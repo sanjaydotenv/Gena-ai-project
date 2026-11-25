@@ -4,7 +4,8 @@ import { Bot, Mail, Lock, ArrowRight } from "lucide-react";
 import { useAuthHook } from "../hooks/useAuthHook";
 
 const LoginPage = () => {
-  const { loading, handleLoginData, handleLoginSubmit } = useAuthHook();
+  const { loading, handleLoginData, handleLoginSubmit, formDataLogin } =
+    useAuthHook();
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#09090b] px-4 py-10 relative overflow-hidden">
@@ -47,8 +48,9 @@ const LoginPage = () => {
               />
 
               <input
-              name="email"
-              onInput={handleLoginData}
+                value={formDataLogin.email}
+                name="email"
+                onInput={handleLoginData}
                 type="email"
                 placeholder="you@example.com"
                 className="w-full bg-[#1a1a1f] border border-white/10 rounded-xl py-3 pl-12 pr-4 text-white text-sm outline-none transition focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10 placeholder:text-gray-600"
@@ -67,8 +69,9 @@ const LoginPage = () => {
               />
 
               <input
-              name="password"
-              onInput={handleLoginData}
+                value={formDataLogin.password}
+                name="password"
+                onInput={handleLoginData}
                 type="password"
                 placeholder="Enter your password"
                 className="w-full bg-[#1a1a1f] border border-white/10 rounded-xl py-3 pl-12 pr-4 text-white text-sm outline-none transition focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10 placeholder:text-gray-600"
