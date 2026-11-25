@@ -10,7 +10,7 @@ export const generateAccessAndRefreshToken = (userId, email) => {
       id: userId,
       email,
     },
-    _Config.JWT_ACCESS,
+    _Config.JWT_ACCESS, {expiresIn: "15m"}
   );
 
   const refreshToken = jwt.sign(
@@ -18,7 +18,7 @@ export const generateAccessAndRefreshToken = (userId, email) => {
       id: userId,
       email,
     },
-    _Config.JWT_REFRESH,
+    _Config.JWT_REFRESH, {expiresIn: "7d"}
   );
 
   return { accessToken, refreshToken };
