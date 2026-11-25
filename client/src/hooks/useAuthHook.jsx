@@ -2,6 +2,7 @@ import { useState } from "react";
 import { loginAPI, registerAPI } from "../api/authAPI";
 import { useDispatch } from "react-redux";
 import { handleLoading, setAccessToken, setUserData } from "../slice/authSlice";
+import { useNavigate } from "react-router";
 
 export const useAuthHook = () => {
   const [formData, setFormData] = useState({
@@ -14,6 +15,7 @@ export const useAuthHook = () => {
     password: "",
   });
 
+  const navigate = useNavigate()
   const dispatch = useDispatch();
 
   const handleRegisterData = (e) => {
@@ -59,6 +61,7 @@ export const useAuthHook = () => {
       email: "",
       password: "",
     });
+    navigate("/dashboard")
   };
 
   return {
