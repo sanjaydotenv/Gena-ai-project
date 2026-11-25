@@ -34,3 +34,13 @@ export const loginUserDAO = async (email, password) => {
 
   return user;
 };
+
+/**
+ * @args { decoded }
+ * @description find user on the basis of _id
+ */
+
+export const findUserDAO = async (id) => {
+  console.log(id)
+  return await userModel.findById(id);
+};

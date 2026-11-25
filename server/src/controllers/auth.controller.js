@@ -3,6 +3,7 @@ import { createUserDAO, loginUserDAO } from "../DAO/auth.dao.js";
 import { generateAccessAndRefreshToken } from "../utils/generateToken.js";
 
 /**
+ * @POST
  * @body { name , email , password }
  * @description Create an new user in DB with hashedPassword
  */
@@ -21,6 +22,7 @@ const registerUserController = async (req, res) => {
 };
 
 /**
+ * @POST
  * @body { email , password }
  * @description Find an user in db on the basis of email and match the password
  */
@@ -58,11 +60,35 @@ const loginUserController = async (req, res) => {
   }
 };
 
-
 /**
- * 
+ * @POST
+ * @body { empty }
+ * @headers { accessToken }
+ * @description first check user authenticated or not how? require accessToken in body, remove the cookie in client side, and logout
  */
 
+const logoutUserController = async (req, res) => {
+  res.cookie("refreshToken");
 
+  res.status(200).json({
+    message: "User Logged Out suuccessfully",
+  });
+};
 
-export default { registerUserController, loginUserController };
+/**
+ * @GET
+ * @body { empty }
+ * @headers { accessToken }
+ * @description first check user authenticated or not than return user information
+ */
+
+const getMeUserController = async (req, res) => {
+  const user = req.user;
+
+  return res.status(200).json({
+    message: "fetch user profile successfully",
+    user,
+  });
+};
+
+export default { registerUserController, loginUserController, logoutUserController , getMeUserController };

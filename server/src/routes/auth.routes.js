@@ -5,6 +5,7 @@ import {
   registerValidator,
 } from "../validation/auth.validation.js";
 import validateRequest from "../middlewares/validateRequest.js";
+import { authenticate } from "../middlewares/authenticate.middleware.js";
 
 const route = Router();
 
@@ -21,4 +22,9 @@ route.post(
   validateRequest,
   authController.loginUserController,
 );
+
+route.post("/logout", authenticate ,authController.logoutUserController);
+
+route.get("/get-me", authenticate ,authController.getMeUserController);
+
 export default route;
