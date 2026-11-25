@@ -11,6 +11,8 @@ import { generateAccessAndRefreshToken } from "../utils/generateToken.js";
 const registerUserController = async (req, res) => {
   const { name, email, password } = req.body;
 
+  console.log("BODY:", req.body);
+
   const hashedPassword = await bcrypt.hash(password, 12);
 
   const user = await createUserDAO(name, email, hashedPassword);
