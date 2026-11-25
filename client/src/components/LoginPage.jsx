@@ -1,8 +1,11 @@
 import React from "react";
 import { Link } from "react-router";
 import { Bot, Mail, Lock, ArrowRight } from "lucide-react";
+import { useAuthHook } from "../hooks/useAuthHook";
 
 const LoginPage = () => {
+  const { loading, handleLoginData, handleLoginSubmit } = useAuthHook();
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#09090b] px-4 py-10 relative overflow-hidden">
       {/* Background Glow */}
@@ -30,7 +33,7 @@ const LoginPage = () => {
         </div>
 
         {/* Form */}
-        <form className="space-y-5">
+        <form onSubmit={handleLoginSubmit} className="space-y-5">
           {/* Email */}
           <div>
             <label className="text-sm text-gray-300 mb-2 block">
@@ -44,6 +47,8 @@ const LoginPage = () => {
               />
 
               <input
+              name="email"
+              onInput={handleLoginData}
                 type="email"
                 placeholder="you@example.com"
                 className="w-full bg-[#1a1a1f] border border-white/10 rounded-xl py-3 pl-12 pr-4 text-white text-sm outline-none transition focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10 placeholder:text-gray-600"
@@ -62,6 +67,8 @@ const LoginPage = () => {
               />
 
               <input
+              name="password"
+              onInput={handleLoginData}
                 type="password"
                 placeholder="Enter your password"
                 className="w-full bg-[#1a1a1f] border border-white/10 rounded-xl py-3 pl-12 pr-4 text-white text-sm outline-none transition focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10 placeholder:text-gray-600"
@@ -72,13 +79,36 @@ const LoginPage = () => {
           {/* Forgot Password */}
 
           {/* Submit */}
-          <button
-            type="submit"
-            className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white font-semibold py-3 rounded-xl transition-all duration-300 shadow-lg shadow-violet-600/20 hover:shadow-violet-600/30 active:scale-[0.98]"
-          >
-            Login
-            <ArrowRight size={18} />
-          </button>
+
+          {loading ? (
+            <button
+              type="submit"
+              className="w-full flex items-center justify-center opacity-50 gap-3 bg-gradient-to-r from-violet-600 to-indigo-600 text-white font-semibold py-3 rounded-xl shadow-lg shadow-violet-600/20 cursor-wait"
+            >
+              <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+
+              <span className="flex items-center">
+                Login
+                <span className="flex ml-1">
+                  <span className="animate-pulse">.</span>
+                  <span className="animate-pulse [animation-delay:200ms]">
+                    .
+                  </span>
+                  <span className="animate-pulse [animation-delay:400ms]">
+                    .
+                  </span>
+                </span>
+              </span>
+            </button>
+          ) : (
+            <button
+              type="submit"
+              className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white font-semibold py-3 rounded-xl transition-all duration-300 shadow-lg shadow-violet-600/20 hover:shadow-violet-600/30 active:scale-[0.98]"
+            >
+              Login
+              <ArrowRight size={18} />
+            </button>
+          )}
         </form>
 
         {/* Register Link */}

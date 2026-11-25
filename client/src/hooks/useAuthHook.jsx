@@ -8,6 +8,10 @@ export const useAuthHook = () => {
     email: "",
     password: "",
   });
+  const [formDataLogin, setFormDataLogin] = useState({
+    email: "",
+    password: "",
+  });
 
   const handleRegisterData = (e) => {
     const name = e.target.name;
@@ -30,11 +34,28 @@ export const useAuthHook = () => {
     });
   };
 
+  const handleLoginData = async (e) => {
+    const value = e.target.value;
+    const name = e.target.name;
+
+    setFormDataLogin({ ...formDataLogin, [name]: value });
+  };
+
+  const handleLoginSubmit = (e) => {
+    e.preventDefault();
+
+
+    console.log(formDataLogin);
+  };
+
   return {
     loading,
     setLoading,
     handleRegisterData,
     handleRegisterSubmit,
     formData,
+    formDataLogin,
+    handleLoginData,
+    handleLoginSubmit,
   };
 };
