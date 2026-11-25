@@ -2,6 +2,11 @@ import bcrypt from "bcrypt";
 import { createUserDAO, loginUserDAO } from "../DAO/auth.dao.js";
 import { generateAccessAndRefreshToken } from "../utils/generateToken.js";
 
+/**
+ * @body { name , email , password }
+ * @description Create an new user in DB with hashedPassword
+ */
+
 const registerUserController = async (req, res) => {
   const { name, email, password } = req.body;
 
@@ -15,30 +20,49 @@ const registerUserController = async (req, res) => {
   });
 };
 
+/**
+ * @body { email , password }
+ * @description Find an user in db on the basis of email and match the password
+ */
+
 const loginUserController = async (req, res) => {
-  const { email, password } = req.body;
+  try {
+    const { email, password } = req.body;
 
-  const user = await loginUserDAO(email, password);
+    const user = await loginUserDAO(email, password);
 
-  const { accessToken, refreshToken } = generateAccessAndRefreshToken(
-    user._id,
-    user.email,
-  );
+    const { accessToken, refreshToken } = generateAccessAndRefreshToken(
+      user._id,
+      user.email,
+    );
 
-  res.cookie("refreshToken", refreshToken, {
-    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 Days
-    httpOnly: true,
-    secure: true,
-    sameSite: "strict",
-  });
+    res.cookie("refreshToken", refreshToken, {
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 Days
+      httpOnly: true,
+      secure: true,
+      sameSite: "strict",
+    });
 
-  res.status(200).json({
-    message: "User Logged Suucessfully",
-    data: {
-      accessToken,
-      user,
-    },
-  });
+    res.status(200).json({
+      message: "User Logged Suucessfully",
+      data: {
+        user,
+        accessToken,
+      },
+    });
+  } catch (error) {
+    return res.status(401).json({
+      success: false,
+      message: error.message,
+    });
+  }
 };
+
+
+/**
+ * 
+ */
+
+
 
 export default { registerUserController, loginUserController };

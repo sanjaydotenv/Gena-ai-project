@@ -24,17 +24,13 @@ export const createUserDAO = async (name, email, password) => {
  */
 
 export const loginUserDAO = async (email, password) => {
-  try {
-    const user = await userModel.findOne({ email });
+  const user = await userModel.findOne({ email });
 
-    const isValidPass = await bcrypt.compare(password, user.password);
+  const isValidPass = await bcrypt.compare(password, user.password);
 
-    if (!isValidPass) {
-      console.log(`Invalid Credentials`);
-    }
-
-    return user
-  } catch (error) {
-    console.log(`Error while login user`);
+  if (!isValidPass) {
+    throw new Error("Invalid Credentials");
   }
+
+  return user;
 };
