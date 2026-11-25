@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { loginAPI, registerAPI } from "../api/authAPI";
+import { useDispatch } from "react-redux";
+import { handleLoading, setAccessToken, setUserData } from "../slice/authSlice";
 
 export const useAuthHook = () => {
-  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -12,6 +13,8 @@ export const useAuthHook = () => {
     email: "",
     password: "",
   });
+
+  const dispatch = useDispatch();
 
   const handleRegisterData = (e) => {
     const name = e.target.name;
@@ -23,9 +26,11 @@ export const useAuthHook = () => {
   const handleRegisterSubmit = async (e) => {
     e.preventDefault();
 
-    setLoading(true);
+    dispatch(handleLoading(true));
     const response = await registerAPI(formData);
-    setLoading(false);
+    console.log(response);
+    dispatch(setUserData(response.data.user));
+    dispatch(handleLoading(false));
 
     setFormData({
       name: "",
@@ -44,9 +49,11 @@ export const useAuthHook = () => {
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
 
-    setLoading(true);
+    dispatch(handleLoading(true));
     const response = await loginAPI(formDataLogin);
-    setLoading(false);
+    dispatch(handleLoading(false));
+    dispatch(setAccessToken(response.data.data.accessToken));
+    dispatch(setUserData(response.data.data.user));
 
     setFormDataLogin({
       email: "",
@@ -55,8 +62,6 @@ export const useAuthHook = () => {
   };
 
   return {
-    loading,
-    setLoading,
     handleRegisterData,
     handleRegisterSubmit,
     formData,

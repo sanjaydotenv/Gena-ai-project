@@ -2,11 +2,12 @@ import React from "react";
 import { Link } from "react-router";
 import { Bot, Mail, Lock, ArrowRight } from "lucide-react";
 import { useAuthHook } from "../hooks/useAuthHook";
+import { useSelector } from "react-redux";
 
 const LoginPage = () => {
-  const { loading, handleLoginData, handleLoginSubmit, formDataLogin } =
-    useAuthHook();
+  const { handleLoginData, handleLoginSubmit, formDataLogin } = useAuthHook();
 
+  const { loading } = useSelector((state) => state.auth);
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#09090b] px-4 py-10 relative overflow-hidden">
       {/* Background Glow */}

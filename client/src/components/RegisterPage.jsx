@@ -2,10 +2,12 @@ import React from "react";
 import { Link } from "react-router";
 import { Bot, User, Mail, Lock, ArrowRight } from "lucide-react";
 import { useAuthHook } from "../hooks/useAuthHook";
+import { useSelector } from "react-redux";
 
 const RegisterPage = () => {
-  const { loading, handleRegisterData, handleRegisterSubmit, formData } =
-    useAuthHook();
+  const { handleRegisterData, handleRegisterSubmit, formData } = useAuthHook();
+
+  const { loading } = useSelector((state) => state.auth);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#09090b] px-4 py-10 relative overflow-hidden">
