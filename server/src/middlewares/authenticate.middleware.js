@@ -5,8 +5,6 @@ import { findUserDAO } from "../DAO/auth.dao.js";
 export const authenticate = async (req, res, next) => {
   const accessToken = req.headers.authorization?.split(" ")[1];
 
-  console.log(accessToken)
-
   if (!accessToken) {
     return res.status(404).json({
       message: "access token not found",
@@ -16,7 +14,6 @@ export const authenticate = async (req, res, next) => {
   try {
     const decoded = jwt.verify(accessToken, _Config.JWT_ACCESS);
 
-    console.log(decoded)
     if (!decoded) {
       res.status(400).json({
         message: "Invalid Token",
@@ -31,7 +28,7 @@ export const authenticate = async (req, res, next) => {
       });
     }
 
-    res.user = user;
+    req.user = user;
 
     next();
   } catch (error) {

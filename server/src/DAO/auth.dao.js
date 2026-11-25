@@ -41,6 +41,5 @@ export const loginUserDAO = async (email, password) => {
  */
 
 export const findUserDAO = async (id) => {
-  console.log(id)
   return await userModel.findById(id);
 };

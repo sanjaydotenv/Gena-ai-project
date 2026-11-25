@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import { createUserDAO, loginUserDAO } from "../DAO/auth.dao.js";
+import { createUserDAO, findUserDAO, loginUserDAO } from "../DAO/auth.dao.js";
 import { generateAccessAndRefreshToken } from "../utils/generateToken.js";
 
 /**
@@ -85,10 +85,17 @@ const logoutUserController = async (req, res) => {
 const getMeUserController = async (req, res) => {
   const user = req.user;
 
+  console.log(user);
+
   return res.status(200).json({
     message: "fetch user profile successfully",
     user,
   });
 };
 
-export default { registerUserController, loginUserController, logoutUserController , getMeUserController };
+export default {
+  registerUserController,
+  loginUserController,
+  logoutUserController,
+  getMeUserController,
+};
