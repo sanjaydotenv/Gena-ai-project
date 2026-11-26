@@ -6,6 +6,7 @@ import DashboardPage from "./components/DashboardPage";
 import axiosInstance from "./config/axiosInstance";
 import { useDispatch } from "react-redux";
 import { setAccessToken, setUserData } from "./slice/authSlice";
+import ChatPage from "./components/ChatPage";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -39,6 +40,10 @@ const App = () => {
     {
       path: "/dashboard",
       element: <DashboardPage />,
+    },
+     {
+      path: "/chat",
+      element: <ChatPage />,
     },
   ]);
 
