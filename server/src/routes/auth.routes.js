@@ -23,8 +23,10 @@ route.post(
   authController.loginUserController,
 );
 
-route.post("/logout", authenticate ,authController.logoutUserController);
+route.post("/logout", authenticate, authController.logoutUserController);
 
-route.get("/get-me", authenticate ,authController.getMeUserController);
+route.get("/get-me", authenticate, authController.getMeUserController);
+
+route.post("/token-rotation", authController.tokenRotationController);
 
 export default route;

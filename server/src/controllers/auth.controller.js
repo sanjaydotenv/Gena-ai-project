@@ -1,6 +1,8 @@
 import bcrypt from "bcrypt";
 import { createUserDAO, findUserDAO, loginUserDAO } from "../DAO/auth.dao.js";
 import { generateAccessAndRefreshToken } from "../utils/generateToken.js";
+import jwt from "jsonwebtoken";
+import { _Config } from "../config/config.js";
 
 /**
  * @POST
@@ -87,11 +89,56 @@ const logoutUserController = async (req, res) => {
 const getMeUserController = async (req, res) => {
   const user = req.user;
 
-  console.log(user);
-
   return res.status(200).json({
     message: "fetch user profile successfully",
     user,
+  });
+};
+
+/**
+ * @POST
+ * @body { empty }
+ * @cookies { refreshToken }
+ * @description if user has refreshToken in cookies than create new accessToken with refreshToken and send the accessToken in response and set new refreshToken in cookies
+ */
+
+const tokenRotationController = async (req, res) => {
+  const { refreshToken } = req.cookies;
+
+  if (!refreshToken) {
+    return res.status(404).json({
+      message: "Refresh Token not found",
+    });
+  }
+
+  const decoded = jwt.verify(refreshToken, _Config.JWT_REFRESH);
+
+  if (!decoded) {
+    return res.status(401).json({
+      message: "Invalid credentials",
+    });
+  }
+
+  const user = await findUserDAO(decoded.id);
+
+  if (!user) {
+    return res.status(404).json({
+      message: "User not found invalid credentials",
+    });
+  }
+
+  const { accessToken, refreshToken: newRefreshToken } =
+    generateAccessAndRefreshToken(user._id, user.email);
+
+  res.cookie("refreshToken", newRefreshToken, {
+    httpOnly: true,
+    sameSite: "strict",
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+  });
+
+  return res.status(200).json({
+    success: true,
+    accessToken,
   });
 };
 
@@ -100,4 +147,5 @@ export default {
   loginUserController,
   logoutUserController,
   getMeUserController,
+  tokenRotationController,
 };
