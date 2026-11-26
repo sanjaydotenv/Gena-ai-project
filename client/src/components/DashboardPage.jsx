@@ -1,5 +1,4 @@
-import React from "react";
-import { Link, Navigate, useNavigate } from "react-router";
+import { Link, Navigate } from "react-router";
 import {
   MessageSquare,
   Sparkles,
@@ -15,7 +14,7 @@ const DashboardPage = () => {
   const { user } = useSelector((state) => state.auth);
 
   if (!user) {
-    return <Navigate to={"/"} />
+    return <Navigate to={"/"} />;
   }
 
   return (
@@ -46,7 +45,7 @@ const DashboardPage = () => {
           </p>
 
           <h2 className="text-3xl md:text-4xl font-semibold mb-3">
-            Welcome back, Mayur 👋
+            Welcome back, {user?.name} 👋
           </h2>
 
           <p className="text-gray-400">What would you like to create today?</p>
@@ -60,8 +59,8 @@ const DashboardPage = () => {
             </div>
 
             <div>
-              <h3 className="font-semibold text-lg">Mayur Bairagi</h3>
-              <p className="text-sm text-gray-500">mayur@example.com</p>
+              <h3 className="font-semibold text-lg">{user?.name}</h3>
+              <p className="text-sm text-gray-500">{user?.email}</p>
               <span className="text-xs text-orange-500 mt-1 inline-block">
                 Free Plan
               </span>
