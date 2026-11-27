@@ -88,48 +88,15 @@ const DashboardPage = () => {
           </div>
 
           {/* Prompt Input */}
-          <div className="bg-[#121212] border border-white/10 rounded-xl p-4 focus-within:border-orange-500/50 transition">
-            <textarea
-              placeholder="Ask me anything..."
-              rows={3}
-              className="w-full bg-transparent outline-none resize-none text-sm placeholder:text-gray-600"
-            />
 
-            <div className="flex justify-between items-center mt-3">
-              <button className="text-gray-500 hover:text-white">
-                <Plus size={20} />
-              </button>
+          <Link
+            to="/chat"
+            className="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white px-5 py-2.5 rounded-lg text-sm font-medium transition w-40"
+          >
+            Start Chat
+            <ArrowRight size={16} />
+          </Link>
 
-              <Link
-                to="/chat"
-                className="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white px-5 py-2.5 rounded-lg text-sm font-medium transition"
-              >
-                Start Chat
-                <ArrowRight size={16} />
-              </Link>
-            </div>
-          </div>
-
-          {/* Suggestions */}
-          <div className="mt-6">
-            <p className="text-xs text-gray-500 mb-3">TRY ASKING</p>
-
-            <div className="flex flex-wrap gap-2">
-              {[
-                "Explain JavaScript closures",
-                "Write a professional email",
-                "Generate creative ideas",
-                "Help me debug my code",
-              ].map((prompt) => (
-                <button
-                  key={prompt}
-                  className="text-xs text-gray-400 border border-white/10 rounded-full px-4 py-2 hover:border-orange-500/50 hover:text-orange-500 transition"
-                >
-                  {prompt}
-                </button>
-              ))}
-            </div>
-          </div>
         </section>
 
         {/* Footer */}

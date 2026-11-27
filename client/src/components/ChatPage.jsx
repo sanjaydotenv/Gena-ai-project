@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router";
+import { Link, Navigate } from "react-router";
 import {
   ArrowLeft,
   Plus,
@@ -16,6 +16,7 @@ import {
   User,
   X,
 } from "lucide-react";
+import { useSelector } from "react-redux";
 
 const STORAGE_KEY = "provity_chat_history";
 
@@ -27,6 +28,13 @@ const suggestions = [
 ];
 
 const ChatPage = () => {
+  
+  const { user } = useSelector((state) => state.auth);
+
+  if (!user) {
+    return <Navigate to={"/"} />;
+  }
+
   const [chats, setChats] = useState(() => {
     try {
       return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];

@@ -9,10 +9,6 @@ const LoginPage = () => {
 
   const { loading, user } = useSelector((state) => state.auth);
 
-  if (!user) {
-    return <h1>loading</h1>;
-  }
-
   if (user) {
     return <Navigate to={"/dashboard"} />;
   }
