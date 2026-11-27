@@ -1,12 +1,12 @@
 import React, { useEffect } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router";
-import RegisterPage from "./components/RegisterPage";
-import LoginPage from "./components/LoginPage";
-import DashboardPage from "./components/DashboardPage";
+import RegisterPage from "./features/auth/ui/pages/RegisterPage";
+import LoginPage from "./features/auth/ui/pages/LoginPage";
+import DashboardPage from "./features/chat/ui/pages/DashboardPage";
 import axiosInstance from "./config/axiosInstance";
 import { useDispatch } from "react-redux";
-import { setAccessToken, setUserData } from "./slice/authSlice";
-import ChatPage from "./components/ChatPage";
+import { setAccessToken, setUserData } from "./features/auth/slice/authSlice";
+import ChatPage from "./features/chat/ui/pages/ChatPage";
 
 const App = () => {
   const dispatch = useDispatch();

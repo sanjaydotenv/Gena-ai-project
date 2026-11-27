@@ -9,9 +9,14 @@ import {
   Settings,
 } from "lucide-react";
 import { useSelector } from "react-redux";
+import { useEffect } from "react";
 
 const DashboardPage = () => {
-  const { user } = useSelector((state) => state.auth);
+  const { user, isAuthenticated } = useSelector((state) => state.auth);
+
+  if (!isAuthenticated) {
+    return "loading";
+  }
 
   if (!user) {
     return <Navigate to={"/"} />;
@@ -96,7 +101,6 @@ const DashboardPage = () => {
             Start Chat
             <ArrowRight size={16} />
           </Link>
-
         </section>
 
         {/* Footer */}

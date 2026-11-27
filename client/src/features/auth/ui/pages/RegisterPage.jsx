@@ -1,13 +1,17 @@
 import React from "react";
 import { Link, Navigate } from "react-router";
-import { Bot, Mail, Lock, ArrowRight, Sparkles } from "lucide-react";
-import { useAuthHook } from "../hooks/useAuthHook";
+import { Bot, User, Mail, Lock, ArrowRight, Sparkles } from "lucide-react";
+import { useAuthHook } from "../../hooks/useAuthHook";
 import { useSelector } from "react-redux";
 
-const LoginPage = () => {
-  const { handleLoginData, handleLoginSubmit, formDataLogin } = useAuthHook();
+const RegisterPage = () => {
+  const { handleRegisterData, handleRegisterSubmit, formData } = useAuthHook();
 
   const { loading, user } = useSelector((state) => state.auth);
+
+  if (!user) {
+    return <h1>loading</h1>;
+  }
 
   if (user) {
     return <Navigate to={"/dashboard"} />;
@@ -15,10 +19,11 @@ const LoginPage = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#09090b] px-4 py-10 relative overflow-hidden">
-      {/* Background */}
+      {/* Background Glow */}
       <div className="absolute w-96 h-96 bg-violet-600/15 blur-[130px] rounded-full -top-32 -left-32 pointer-events-none" />
       <div className="absolute w-96 h-96 bg-indigo-600/10 blur-[130px] rounded-full -bottom-32 -right-32 pointer-events-none" />
 
+      {/* Background Pattern */}
       <div
         className="absolute inset-0 opacity-[0.025] pointer-events-none"
         style={{
@@ -27,7 +32,7 @@ const LoginPage = () => {
         }}
       />
 
-      {/* Login Card */}
+      {/* Register Card */}
       <div className="relative w-full max-w-[430px] bg-[#111114]/95 border border-white/[0.08] rounded-3xl p-7 sm:p-9 shadow-[0_20px_80px_rgba(0,0,0,0.5)] backdrop-blur-xl">
         {/* Logo */}
         <div className="flex justify-center mb-7">
@@ -41,23 +46,47 @@ const LoginPage = () => {
         </div>
 
         {/* Heading */}
-        <div className="text-center mb-9">
+        <div className="text-center mb-8">
           <div className="inline-flex items-center gap-2 text-xs font-medium text-violet-300 bg-violet-500/10 border border-violet-500/20 px-3 py-1.5 rounded-full mb-4">
             <Sparkles size={13} />
-            Your AI Workspace
+            Join the AI Workspace
           </div>
 
           <h1 className="text-3xl font-bold text-white tracking-tight">
-            Welcome Back
+            Create Account
           </h1>
 
           <p className="text-gray-500 text-sm mt-2">
-            Sign in to continue your AI journey.
+            Start building something intelligent.
           </p>
         </div>
 
         {/* Form */}
-        <form onSubmit={handleLoginSubmit} className="space-y-5">
+        <form onSubmit={handleRegisterSubmit} className="space-y-5">
+          {/* Name */}
+          <div>
+            <label className="text-sm font-medium text-gray-300 mb-2 block">
+              Full Name
+            </label>
+
+            <div className="relative group">
+              <User
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-violet-400 transition-colors"
+                size={18}
+              />
+
+              <input
+                required
+                value={formData.name}
+                name="name"
+                onInput={handleRegisterData}
+                type="text"
+                placeholder="Enter your name"
+                className="w-full bg-[#19191f] border border-white/[0.08] rounded-xl py-3.5 pl-12 pr-4 text-white text-sm outline-none transition-all duration-300 focus:border-violet-500/60 focus:bg-[#1d1b26] focus:ring-4 focus:ring-violet-500/10 placeholder:text-gray-600"
+              />
+            </div>
+          </div>
+
           {/* Email */}
           <div>
             <label className="text-sm font-medium text-gray-300 mb-2 block">
@@ -72,9 +101,9 @@ const LoginPage = () => {
 
               <input
                 required
-                value={formDataLogin.email}
+                value={formData.email}
                 name="email"
-                onInput={handleLoginData}
+                onInput={handleRegisterData}
                 type="email"
                 placeholder="you@example.com"
                 className="w-full bg-[#19191f] border border-white/[0.08] rounded-xl py-3.5 pl-12 pr-4 text-white text-sm outline-none transition-all duration-300 focus:border-violet-500/60 focus:bg-[#1d1b26] focus:ring-4 focus:ring-violet-500/10 placeholder:text-gray-600"
@@ -96,11 +125,11 @@ const LoginPage = () => {
 
               <input
                 required
-                value={formDataLogin.password}
+                value={formData.password}
                 name="password"
-                onInput={handleLoginData}
+                onInput={handleRegisterData}
                 type="password"
-                placeholder="Enter your password"
+                placeholder="Create a strong password"
                 className="w-full bg-[#19191f] border border-white/[0.08] rounded-xl py-3.5 pl-12 pr-4 text-white text-sm outline-none transition-all duration-300 focus:border-violet-500/60 focus:bg-[#1d1b26] focus:ring-4 focus:ring-violet-500/10 placeholder:text-gray-600"
               />
             </div>
@@ -115,7 +144,7 @@ const LoginPage = () => {
               <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
 
               <span className="flex items-center">
-                Login
+                Creating Account
                 <span className="flex ml-1">
                   <span className="animate-pulse">.</span>
                   <span className="animate-pulse [animation-delay:200ms]">
@@ -132,7 +161,7 @@ const LoginPage = () => {
               type="submit"
               className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white font-semibold py-3.5 rounded-xl transition-all duration-300 shadow-lg shadow-violet-600/20 hover:shadow-violet-600/30 active:scale-[0.98] group"
             >
-              Login
+              Create Account
               <ArrowRight
                 size={18}
                 className="group-hover:translate-x-1 transition-transform"
@@ -141,15 +170,15 @@ const LoginPage = () => {
           )}
         </form>
 
-        {/* Register Link */}
+        {/* Login Link */}
         <div className="mt-7 text-center">
           <p className="text-sm text-gray-500">
-            Don't have an account?{" "}
+            Already have an account?{" "}
             <Link
-              to="/register"
+              to="/"
               className="text-violet-400 hover:text-violet-300 font-semibold transition-colors"
             >
-              Create Account
+              Login
             </Link>
           </p>
         </div>
@@ -165,4 +194,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default RegisterPage;
