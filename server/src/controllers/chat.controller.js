@@ -40,6 +40,10 @@ const convesationController = async (req, res) => {
 
   messages.push(new HumanMessage(content));
 
+  res.setHeader('Content-Type', 'text/event-stream');
+  res.setHeader('Cache-Control', 'no-cache');
+  res.setHeader('Connection', 'keep-alive');
+
   const response = await model.stream(content);
 
   let aiChunk = null;
