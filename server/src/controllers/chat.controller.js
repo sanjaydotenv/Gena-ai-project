@@ -2,6 +2,8 @@ import { HumanMessage, AIMessage } from "langchain";
 import {
   createConversationDAO,
   createMessageDAO,
+  findAllConversationByUserId,
+  findConversationByIdAndUser,
   findConversationDao,
   findMessagesByConversation,
 } from "../DAO/chat.dao.js";
@@ -78,4 +80,39 @@ const convesationController = async (req, res) => {
   });
 };
 
-export default { convesationController };
+const getAllConversationController = async (req, res) => {
+  const { id } = req.user;
+
+  const conversations = await findAllConversationByUserId(id);
+
+  res.status(200).json({
+    message: "all conversation fetched successfully",
+    conversations,
+  });
+};
+
+const getAllMessageByConersation = async (req, res) => {
+  const { conversationId } = req.params;
+  const { id } = req.user;
+
+  const conversation = await findConversationByIdAndUser(id, conversationId);
+
+  if (conversation.length === 0) {
+    return res.status(404).json({
+      message: "conversation not found",
+    });
+  }
+
+  const messages = await findMessagesByConversation(conversation._id);
+
+  res.status(200).json({
+    message: "all message fetched successfully",
+    messages,
+  });
+};
+
+export default {
+  convesationController,
+  getAllConversationController,
+  getAllMessageByConersation,
+};

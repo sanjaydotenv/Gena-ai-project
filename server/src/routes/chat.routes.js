@@ -6,4 +6,16 @@ const route = Router();
 
 route.post("/conversation", authenticate, chatController.convesationController);
 
+route.get(
+  "/get-all-conversation",
+  authenticate,
+  chatController.getAllConversationController,
+);
+
+route.get(
+  "/get-all-messages/:conversationId",
+  authenticate,
+  chatController.getAllMessageByConersation,
+);
+
 export default route;
