@@ -1,5 +1,11 @@
-import { createConversationDAO, findConversationDao } from "../DAO/chat.dao";
+import { HumanMessage, AIMessage } from "langchain";
+import {
+  createConversationDAO,
+  findConversationDao,
+  findMessagesByConversation,
+} from "../DAO/chat.dao";
 import { generateTitle } from "../services/generateConversationTitle.service";
+import model from "../services/main.service.js";
 
 const convesationController = async (req, res) => {
   const { content, conversation: conversationId } = req.body;
@@ -20,8 +26,31 @@ const convesationController = async (req, res) => {
     }
   }
 
+  const messages = (await findMessagesByConversation(conversation._id))
+    .map((msg) => {
+      if (msg.role === "user") {
+        return new HumanMessage(msg.content);
+      } else if (msg.role === "assistant") {
+        return new AIMessage(msg.content);
+      }
 
-  
+      return null;
+    })
+    .filter(Boolean);
+
+  messages.push(new HumanMessage(content));
+
+  const response = await model.stream(content);
+
+  let aiChunk = null;
+
+  for await (let chunk of response) {
+    if (aiChunk == null) {
+      aiChunk = chunk;
+    } else {
+      aiChunk = aiChunk.concat(chunk);
+    }
+  }
 };
 
 export default { convesationController };
