@@ -40,9 +40,13 @@ const convesationController = async (req, res) => {
 
   messages.push(new HumanMessage(content));
 
-  res.setHeader('Content-Type', 'text/event-stream');
-  res.setHeader('Cache-Control', 'no-cache');
-  res.setHeader('Connection', 'keep-alive');
+  res.setHeader("Content-Type", "text/event-stream");
+  res.setHeader("Cache-Control", "no-cache");
+  res.setHeader("Connection", "keep-alive");
+
+  res.write(
+    `data: ${JSON.stringify({ conversationId: conversation.id, title: conversation.title })}\n\n`,
+  );
 
   const response = await model.stream(content);
 
@@ -54,7 +58,11 @@ const convesationController = async (req, res) => {
     } else {
       aiChunk = aiChunk.concat(chunk);
     }
+
+    res.write(`data: ${JSON.stringify({ chunk: chunk.content })}\n\n`);
   }
+
+  res.end();
 };
 
 export default { convesationController };
