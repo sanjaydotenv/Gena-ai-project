@@ -11,18 +11,17 @@ const convesationController = async (req, res) => {
 
     conversation = createConversationDAO(id, title);
   } else {
-    const conversation = await findConversationDao(id, conversationId);
+    conversation = await findConversationDao(id, conversationId);
 
     if (!conversation) {
       return res.status(404).json({
         message: "Conversation not found",
       });
     }
-
-    
-
-
   }
+
+
+  
 };
 
 export default { convesationController };

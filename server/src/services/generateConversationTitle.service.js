@@ -1,10 +1,11 @@
 import { ChatGroq } from "@langchain/groq";
 import * as z from "zod";
 import { SystemMessage, HumanMessage } from "langchain";
+import { _Config } from "../config/config";
 
 const model = new ChatGroq({
   model: "qwen/qwen3.8-27b",
-  apiKey: process.env.GROQ_API_KEY,
+  apiKey: _Config.GROQ_API_KEY,
 });
 
 const structureModel = model.withStructuredOutput(
