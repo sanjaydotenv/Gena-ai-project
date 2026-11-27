@@ -1,16 +1,27 @@
-import { createConversationDAO } from "../DAO/chat.dao";
+import { createConversationDAO, findConversationDao } from "../DAO/chat.dao";
 import { generateTitle } from "../services/generateConversationTitle.service";
 
 const convesationController = async (req, res) => {
-  const { content, conversation } = req.body;
+  const { content, conversation: conversationId } = req.body;
   const { id } = req.user;
 
-  if (!conversation) {
+  let conversation;
+  if (!conversationId) {
     const title = await generateTitle(content);
 
-    const conversation = createConversationDAO(id, title);
-  }else {
+    conversation = createConversationDAO(id, title);
+  } else {
+    const conversation = await findConversationDao(id, conversationId);
+
+    if (!conversation) {
+      return res.status(404).json({
+        message: "Conversation not found",
+      });
+    }
+
     
+
+
   }
 };
 
