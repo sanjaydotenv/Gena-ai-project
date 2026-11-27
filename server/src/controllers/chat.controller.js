@@ -1,10 +1,11 @@
 import { HumanMessage, AIMessage } from "langchain";
 import {
   createConversationDAO,
+  createMessageDAO,
   findConversationDao,
   findMessagesByConversation,
-} from "../DAO/chat.dao";
-import { generateTitle } from "../services/generateConversationTitle.service";
+} from "../DAO/chat.dao.js";
+import { generateTitle } from "../services/generateConversationTitle.service.js";
 import model from "../services/main.service.js";
 
 const convesationController = async (req, res) => {
@@ -13,9 +14,9 @@ const convesationController = async (req, res) => {
 
   let conversation;
   if (!conversationId) {
-    const title = await generateTitle(content);
+    const { title } = await generateTitle(content);
 
-    conversation = createConversationDAO(id, title);
+    conversation = await createConversationDAO(id, title);
   } else {
     conversation = await findConversationDao(id, conversationId);
 
@@ -48,7 +49,13 @@ const convesationController = async (req, res) => {
     `data: ${JSON.stringify({ conversationId: conversation.id, title: conversation.title })}\n\n`,
   );
 
-  const response = await model.stream(content);
+  await createMessageDAO({
+    role: "user",
+    content,
+    conversation: conversation._id,
+  });
+
+  const response = await model.stream(messages);
 
   let aiChunk = null;
 
@@ -63,6 +70,12 @@ const convesationController = async (req, res) => {
   }
 
   res.end();
+
+  await createMessageDAO({
+    role: "assistant",
+    content: aiChunk.content,
+    conversation: conversation._id,
+  });
 };
 
 export default { convesationController };

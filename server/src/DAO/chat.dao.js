@@ -33,3 +33,13 @@ export const findConversationDao = async (userId, conversationId) => {
 export const findMessagesByConversation = async (conversationId) => {
   return await MessageModel.find({ conversation: conversationId });
 };
+
+
+/**
+ * @args { role , content , conversationId }
+ * @description create message 
+ */
+
+export const createMessageDAO = async (msg) => {
+  return await MessageModel.create(msg)
+}
