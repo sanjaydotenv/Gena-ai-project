@@ -1,4 +1,4 @@
-import { HumanMessage, AIMessage } from "langchain";
+import { HumanMessage, AIMessage, createAgent } from "langchain";
 import {
   createConversationDAO,
   createMessageDAO,
@@ -8,13 +8,23 @@ import {
   findMessagesByConversation,
 } from "../DAO/chat.dao.js";
 import { generateTitle } from "../services/generateConversationTitle.service.js";
+import { MCPAdapter } from "@langchain/mcp-adapters";
 import model from "../services/main.service.js";
+import { _Config } from "../config/config.js";
+
+const adapter = new MCPAdapter({
+  servers: {
+    tavily: {
+      url: _Config.TAVILY_API_KEY,
+    },
+  },
+});
+
+const tools = await adapter.listTools();
 
 const convesationController = async (req, res) => {
   const { content, conversation: conversationId } = req.body;
   const { id } = req.user;
-
-  console.log(conversationId)
 
   let conversation;
   if (!conversationId) {
@@ -59,25 +69,28 @@ const convesationController = async (req, res) => {
     conversation: conversation._id,
   });
 
-  const response = await model.stream(messages);
+  const agent = createAgent({
+    model,
+    tools,
+  });
 
-  let aiChunk = null;
+  const response = await agent.invoke({
+    messages,
+  });
 
-  for await (let chunk of response) {
-    if (aiChunk == null) {
-      aiChunk = chunk;
-    } else {
-      aiChunk = aiChunk.concat(chunk);
-    }
+  console.log("AGENT RESPONSE:", response);
 
-    res.write(`data: ${JSON.stringify({ chunk: chunk.content })}\n\n`);
-  }
+  const aiMessage = response.messages[response.messages.length - 1];
+
+  console.log("AI MESSAGE:", aiMessage.content);
+
+  res.write(`data: ${JSON.stringify({ chunk: aiMessage.content })}\n\n`);
 
   res.end();
 
   await createMessageDAO({
     role: "assistant",
-    content: aiChunk.content,
+    content: aiMessage.content,
     conversation: conversation._id,
   });
 };
@@ -85,7 +98,7 @@ const convesationController = async (req, res) => {
 const getAllConversationController = async (req, res) => {
   const { id } = req.user;
 
-  const conversations = await findAllConversationByUserId(id)
+  const conversations = await findAllConversationByUserId(id);
 
   res.status(200).json({
     message: "all conversation fetched successfully",

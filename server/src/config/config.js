@@ -55,4 +55,5 @@ export const _Config = {
   JWT_ACCESS: process.env.JWT_SECRET_ACCESS,
   JWT_REFRESH: process.env.JWT_SECRET_REFRESH,
   GROQ_API_KEY: process.env.GROQ_API_KEY,
+  TAVILY_API_KEY: process.env.TAVILY_API_KEY,
 };
