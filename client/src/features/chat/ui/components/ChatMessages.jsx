@@ -1,18 +1,27 @@
-import React from 'react'
+import React from "react";
+import { useSelector } from "react-redux";
 
-const ChatMessages = () => {
+const ChatMessages = ({messages}) => {
+
+
   return (
-    <div className="flex-1 overflow-y-auto ">
-          {/* Chat Messages */}
-          <div className="max-w-3xl mx-auto px-5 md:px-8 py-10 space-y-8">
-            {/* User Message */}
-            <div className="flex gap-4 flex-row-reverse"></div>
-
-            {/* AI Message */}
-            <div className="flex gap-4"></div>
+    <div className="flex flex-col gap-5 p-4  overflow-auto">
+      {messages?.map((msg) => {
+        return (
+          <div
+            key={msg._id}
+            className={`w-fit max-w-[80%] p-4 rounded-xl break-words ${
+              msg.role === "user"
+                ? "self-end bg-[#173E76] text-white"
+                : "self-start bg-black text-white/80"
+            }`}
+          >
+            {msg.content}
           </div>
-        </div>
-  )
-}
+        );
+      })}
+    </div>
+  );
+};
 
-export default ChatMessages
+export default ChatMessages;

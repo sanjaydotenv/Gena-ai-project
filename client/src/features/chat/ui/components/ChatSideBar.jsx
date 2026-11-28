@@ -6,8 +6,11 @@ import {
   PanelLeftClose,
   Trash2,
 } from "lucide-react";
+import useChatHook from "../../hooks/chatHook";
 
-const ChatSideBar = () => {
+const ChatSideBar = ({ conversations }) => {
+  const { handleConversationMsg } = useChatHook();
+
   return (
     <aside className="w-[280px] shrink-0 bg-[#171717] border-r border-white/[0.06] flex flex-col">
       {/* Logo */}
@@ -38,13 +41,21 @@ const ChatSideBar = () => {
         </p>
 
         <div className="space-y-1">
-          <div className="group flex items-center gap-2 rounded-lg px-3 py-3 bg-white/[0.07] text-white">
-            <MessageSquare size={16} />
-            <span className="text-sm truncate flex-1">
-              Understanding JavaScript Closures
-            </span>
-            <Trash2 size={15} className="text-gray-500" />
-          </div>
+          {conversations.map((cnvs) => {
+            return (
+              <div
+                onClick={() => {
+                  handleConversationMsg(cnvs._id);
+                }}
+                key={cnvs._id}
+                className="group flex items-center gap-2 rounded-lg px-3 py-3 bg-white/[0.07] text-white"
+              >
+                <MessageSquare size={16} />
+                <span className="text-sm truncate flex-1">{cnvs.title}</span>
+                <Trash2 size={15} className="text-gray-500" />
+              </div>
+            );
+          })}
         </div>
       </div>
 

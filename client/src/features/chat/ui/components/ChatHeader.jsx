@@ -1,12 +1,14 @@
 import React from "react";
 import { MoreHorizontal } from "lucide-react";
 
-const ChatHeader = () => {
+const ChatHeader = ({conversations}) => {
+
+  console.log(conversations)
   return (
     <header className="h-[76px] px-5 md:px-8 flex items-center justify-between border-b border-white/[0.06] shrink-0">
       <div>
         <h2 className="font-semibold text-sm md:text-base">
-          Understanding JavaScript Closures
+          {conversations[0]?.title}
         </h2>
 
         <p className="text-xs text-gray-500 mt-1 flex items-center gap-1.5">
