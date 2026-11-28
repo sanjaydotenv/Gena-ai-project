@@ -26,13 +26,14 @@ const useChatHook = () => {
   const {currentConversation} = useSelector(state => state.chat)
 
 
+
   const handleAllChatConversation = async () => {
     const response = await getAllConversationAPI(accessToken);
 
     dispatch(setAllConversation(response.data.conversations));
   };
 
-  const handleConversationMsg = async (conversation) => { 
+  const handleConversationMsg = async (conversation) => {
     dispatch(setCurrentConversation(conversation));
 
     const response = await getMessagesByConversationIdAPI(conversation, accessToken);
@@ -72,7 +73,7 @@ const useChatHook = () => {
     try {
       const response = await handleConversationAPI(
         content,
-        currentConversation._id,
+        currentConversation,
         accessToken,
       );
 

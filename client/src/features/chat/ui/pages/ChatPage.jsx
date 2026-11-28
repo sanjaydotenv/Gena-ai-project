@@ -10,12 +10,13 @@ import useChatHook from "../../hooks/chatHook";
 
 const ChatPage = () => {
   const {
-    handleAllChatConversation,
-    handleConversationMsg,
-    handleUserMsgSend,
-    setUserMsg,
-    userMsg,
-  } = useChatHook();
+  handleAllChatConversation,
+  handleConversationMsg,
+  handleUserMsgSend,
+  handleNewChat,
+  setUserMsg,
+  userMsg,
+} = useChatHook();
 
   const { accessToken } = useSelector((state) => state.auth);
 

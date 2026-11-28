@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import useChatHook from "../../hooks/chatHook";
 
-const ChatSideBar = ({ conversations }) => {
+const ChatSideBar = ({ conversations  }) => {
   const { handleConversationMsg } = useChatHook();
 
   return (
