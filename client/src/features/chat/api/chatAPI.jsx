@@ -19,27 +19,35 @@ export const getMessagesByConversationIdAPI = async (
   });
 };
 
-export const handleConversationAPI = async (content,conversationId , accessToken) => {
-  console.log(content , accessToken)
-  try {
-    const response = await fetch("/api/chat/conversation", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-      },
-      body: JSON.stringify({
-        content,
-      }),
-    });
+export const handleConversationAPI = async (
+  content,
+  conversationId,
+  accessToken,
+) => {
+  console.log("SENDING CONVERSATION ID:", conversationId);
 
-    if (!response.ok) {
-      throw new Error("Something went wrong!");
-    }
+  const response = await fetch("/api/chat/conversation", {
+    method: "POST",
 
-    return response;
-  } catch (error) {
-    console.log("API Error:", error.message);
-    throw error;
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${accessToken}`,
+    },
+
+    body: JSON.stringify({
+      content,
+      conversation: conversationId,
+    }),
+  });
+
+  if (!response.ok) {
+    const error = await response.text();
+
+    console.log("STATUS:", response.status);
+    console.log("ERROR RESPONSE:", error);
+
+    throw new Error(error);
   }
+
+  return response;
 };

@@ -83,7 +83,7 @@ const convesationController = async (req, res) => {
 const getAllConversationController = async (req, res) => {
   const { id } = req.user;
 
-  const conversations = await findAllConversationByUserId(id);
+  const conversations = await findAllConversationByUserId(id)
 
   res.status(200).json({
     message: "all conversation fetched successfully",

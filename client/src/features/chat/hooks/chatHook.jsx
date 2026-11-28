@@ -1,77 +1,137 @@
 import { useDispatch, useSelector } from "react-redux";
+
 import {
   getAllConversationAPI,
   getMessagesByConversationIdAPI,
   handleConversationAPI,
 } from "../api/chatAPI";
+
 import {
+  addMessage,
+  setAiLatestMessage,
   setAllConversation,
   setAllMessagesByConversation,
+  setCurrentConversation,
+  resetAiLatestMessage,
 } from "../slice/chat.slice";
+
 import { useState } from "react";
 
 const useChatHook = () => {
   const [userMsg, setUserMsg] = useState("");
-  const [conversationId, setConversationId] = useState(null);
+  const [conversationId, setConversationId] = useState("")
 
   const dispatch = useDispatch();
+
   const { accessToken } = useSelector((state) => state.auth);
 
-  const handleAllChatConversation = async (accessToken) => {
+
+  const handleAllChatConversation = async () => {
     const response = await getAllConversationAPI(accessToken);
+
     dispatch(setAllConversation(response.data.conversations));
   };
 
-  const handleConversationMsg = async (id) => {
+  const handleConversationMsg = async (conversation) => {
+    dispatch(setCurrentConversation(conversation));
+
+    const id = conversation._id || conversation.id;
+
     const response = await getMessagesByConversationIdAPI(id, accessToken);
+
     dispatch(setAllMessagesByConversation(response.data.messages));
   };
 
   const handleUserMsgSend = async () => {
-    const response = await handleConversationAPI(
-      userMsg,
-      conversationId,
-      accessToken,
+    if (!userMsg.trim()) return;
+
+    const content = userMsg;
+
+
+    // Show user message immediately
+    dispatch(
+      addMessage({
+        role: "user",
+        content,
+      }),
     );
 
-    const reader = response.body.getReader();
-    const decoder = new TextDecoder();
+    // Reset AI response
+    dispatch(resetAiLatestMessage());
 
-    let buffer = "";
+    // Add empty assistant message
+    dispatch(
+      addMessage({
+        role: "assistant",
+        content: "",
+      }),
+    );
 
-    while (true) {
-      const { done, value } = await reader.read();
+    setUserMsg("");
 
-      if (done) break;
+    try {
+      const response = await handleConversationAPI(
+        content,
+        conversationId,
+        accessToken,
+      );
 
-      buffer += decoder.decode(value, { stream: true });
+      const reader = response.body.getReader();
 
-      const events = buffer.split("\n\n");
+      const decoder = new TextDecoder();
 
-      buffer = events.pop() || "";
+      let buffer = "";
 
-      events.forEach((event) => {
-        if (event.startsWith("data: ")) {
+      while (true) {
+        const { done, value } = await reader.read();
+
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+
+        const events = buffer.split("\n\n");
+
+        buffer = events.pop() || "";
+
+        for (const event of events) {
+          if (!event.startsWith("data: ")) continue;
+
           const data = JSON.parse(event.slice(6));
 
+          setConversationId(data.conversationId)
+
+          // First response: conversation information
           if (data.conversationId) {
-            setConversationId(data.conversationId);
+            const newConversation = {
+              _id: data.conversationId,
+              title: data.title,
+            };
+
+            dispatch(setCurrentConversation(newConversation));
+
+            await handleAllChatConversation();
           }
 
+          // AI streaming chunks
           if (data.chunk) {
-            console.log(data.chunk);
+            dispatch(setAiLatestMessage(data.chunk));
           }
         }
-      });
+      }
+
+      // Save complete AI response in Redux messages
+      // The actual database save is already done by backend.
+    } catch (error) {
+      console.log("Chat Error:", error.message);
     }
   };
 
   return {
     handleAllChatConversation,
     handleConversationMsg,
+    handleUserMsgSend,
     setUserMsg,
     userMsg,
-    handleUserMsgSend,
   };
 };
 

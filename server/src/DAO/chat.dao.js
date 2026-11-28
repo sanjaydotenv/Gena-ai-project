@@ -31,7 +31,7 @@ export const findConversationDao = async (userId, conversationId) => {
  */
 
 export const findMessagesByConversation = async (conversationId) => {
-  console.log("IN DAO" , conversationId)
+  console.log("IN DAO", conversationId);
   return await MessageModel.find({ conversation: conversationId });
 };
 
@@ -52,7 +52,7 @@ export const createMessageDAO = async (msg) => {
 export const findAllConversationByUserId = async (userId) => {
   return await ConversationModel.find({
     user: userId,
-  });
+  }).sort({ createdAt: -1 });
 };
 
 /**
@@ -66,4 +66,3 @@ export const findConversationByIdAndUser = async (userId, conversationId) => {
     user: userId,
   });
 };
-

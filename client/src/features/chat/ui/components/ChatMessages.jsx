@@ -1,22 +1,29 @@
 import React from "react";
-import { useSelector } from "react-redux";
 
-const ChatMessages = ({messages}) => {
+const ChatMessages = ({ messages, aiLatestMessage }) => {
 
-
+  console.log(messages)
   return (
-    <div className="flex flex-col gap-5 p-4  overflow-auto">
-      {messages?.map((msg) => {
+    <div className="flex flex-col gap-5 p-4 min-h-118 overflow-auto">
+      {messages?.map((msg, index) => {
+        const isUser = msg.role === "user";
+
+        // Last assistant message is currently streaming
+        const isLastAssistant =
+          msg.role === "assistant" && index === messages.length - 1;
+
+        const content = isLastAssistant ? aiLatestMessage : msg.content;
+
         return (
           <div
-            key={msg._id}
-            className={`w-fit max-w-[80%] p-4 rounded-xl break-words ${
-              msg.role === "user"
+            key={msg._id || index}
+            className={`w-fit max-w-[80%] p-4 rounded-xl break-words whitespace-pre-wrap ${
+              isUser
                 ? "self-end bg-[#173E76] text-white"
                 : "self-start bg-black text-white/80"
             }`}
           >
-            {msg.content}
+            {content}
           </div>
         );
       })}
