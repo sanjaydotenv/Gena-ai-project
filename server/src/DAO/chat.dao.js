@@ -21,7 +21,7 @@ export const createConversationDAO = async (userId, title) => {
 export const findConversationDao = async (userId, conversationId) => {
   return await ConversationModel.findOne({
     user: userId,
-    conversationId,
+    _id: conversationId,
   });
 };
 

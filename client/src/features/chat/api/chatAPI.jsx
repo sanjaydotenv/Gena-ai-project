@@ -21,11 +21,11 @@ export const getMessagesByConversationIdAPI = async (
 
 export const handleConversationAPI = async (
   content,
-  conversationId,
+  conversation,
   accessToken,
 ) => {
-  console.log("SENDING CONVERSATION ID:", conversationId);
 
+  console.log(content , conversation , "accessToken" , accessToken)
   const response = await fetch("/api/chat/conversation", {
     method: "POST",
 
@@ -36,7 +36,7 @@ export const handleConversationAPI = async (
 
     body: JSON.stringify({
       content,
-      conversation: conversationId,
+      conversation: conversation,
     }),
   });
 

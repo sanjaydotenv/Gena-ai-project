@@ -7,7 +7,7 @@ const chatSlice = createSlice({
     conversations: [],
     messages: [],
     currentConversation: null,
-    aiLatestMessage: "",
+    aiLatestMessage: null,
   },
 
   reducers: {

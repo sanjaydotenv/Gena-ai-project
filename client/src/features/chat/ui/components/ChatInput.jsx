@@ -3,12 +3,13 @@ import { Send, Paperclip } from "lucide-react";
 import useChatHook from "../../hooks/chatHook";
 
 const ChatInput = () => {
-  const { setUserMsg , handleUserMsgSend} = useChatHook();
+  const { setUserMsg , handleUserMsgSend , userMsg} = useChatHook();
   return (
     <div className="px-4 md:px-8 pb-5 pt-3 shrink-0 ">
       <div className="max-w-3xl mx-auto">
         <div className="bg-[#1c1c1c] border border-white/[0.09] rounded-2xl p-3">
           <textarea
+          value={userMsg}
           onInput={(e) => {
             setUserMsg(e.target.value)
           }}

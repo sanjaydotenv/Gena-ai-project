@@ -19,11 +19,11 @@ import { useState } from "react";
 
 const useChatHook = () => {
   const [userMsg, setUserMsg] = useState("");
-  const [conversationId, setConversationId] = useState("")
 
   const dispatch = useDispatch();
 
   const { accessToken } = useSelector((state) => state.auth);
+  const {currentConversation} = useSelector(state => state.chat)
 
 
   const handleAllChatConversation = async () => {
@@ -32,21 +32,21 @@ const useChatHook = () => {
     dispatch(setAllConversation(response.data.conversations));
   };
 
-  const handleConversationMsg = async (conversation) => {
+  const handleConversationMsg = async (conversation) => { 
     dispatch(setCurrentConversation(conversation));
 
-    const id = conversation._id || conversation.id;
-
-    const response = await getMessagesByConversationIdAPI(id, accessToken);
+    const response = await getMessagesByConversationIdAPI(conversation, accessToken);
 
     dispatch(setAllMessagesByConversation(response.data.messages));
   };
+
 
   const handleUserMsgSend = async () => {
     if (!userMsg.trim()) return;
 
     const content = userMsg;
 
+    setUserMsg("")
 
     // Show user message immediately
     dispatch(
@@ -72,7 +72,7 @@ const useChatHook = () => {
     try {
       const response = await handleConversationAPI(
         content,
-        conversationId,
+        currentConversation._id,
         accessToken,
       );
 
@@ -98,7 +98,7 @@ const useChatHook = () => {
 
           const data = JSON.parse(event.slice(6));
 
-          setConversationId(data.conversationId)
+          console.log(data)
 
           // First response: conversation information
           if (data.conversationId) {

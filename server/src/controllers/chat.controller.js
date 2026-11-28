@@ -14,6 +14,8 @@ const convesationController = async (req, res) => {
   const { content, conversation: conversationId } = req.body;
   const { id } = req.user;
 
+  console.log(conversationId)
+
   let conversation;
   if (!conversationId) {
     const { title } = await generateTitle(content);
