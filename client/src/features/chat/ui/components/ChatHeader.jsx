@@ -4,6 +4,7 @@ import { MoreHorizontal } from "lucide-react";
 const ChatHeader = ({conversations}) => {
 
   console.log(conversations)
+
   return (
     <header className="h-[76px] px-5 md:px-8 flex items-center justify-between border-b border-white/[0.06] shrink-0">
       <div>

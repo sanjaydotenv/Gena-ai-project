@@ -7,7 +7,6 @@ import useChatHook from "../../hooks/chatHook";
 import { useEffect } from "react";
 
 const ChatPage = () => {
-
   const { handleAllChatConversation } = useChatHook();
   const { accessToken } = useSelector((state) => state.auth);
 
@@ -21,7 +20,6 @@ const ChatPage = () => {
 
   const { messages } = useSelector((state) => state.chat);
 
-  console.log(messages);
   return (
     <div className="h-screen bg-[#121212] text-white flex overflow-hidden">
       {/* Sidebar */}
